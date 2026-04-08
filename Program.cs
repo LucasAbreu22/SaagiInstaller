@@ -125,9 +125,20 @@ namespace SaagiInstaller
             Console.WriteLine();
 
             Console.WriteLine("------------------------------------------");
-            Console.WriteLine("Configuração do SAAGI concluída!");
-            Console.WriteLine("Pressione qualquer tecla para sair...");
+            Console.WriteLine("Configuração do SAAGI concluída com sucesso!");
+            Console.WriteLine("Pressione qualquer tecla para sair do instalador e abrir o sistema no navegador...");
             Console.ReadKey();
+
+            try
+            {
+                Process.Start(new ProcessStartInfo(urlBase) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"\n[AVISO] Não foi possível abrir o navegador automaticamente: {ex.Message}");
+                Console.WriteLine($"Por favor, acesse o sistema manualmente através do link: {urlBase}");
+                System.Threading.Thread.Sleep(6000);
+            }
         }
 
         static bool ValidateProcessAndStart(string processName, string displayName, string startScriptPath)
