@@ -339,23 +339,12 @@ namespace SaagiInstaller
                 }
             }
 
-            string ipLocal = ObterIpLocalDaMaquina(); // Ainda útil para replace do host
-
             try
             {
                 string content = File.ReadAllText(configPath);
 
                 // URL_BASE
                 content = Regex.Replace(content, @"(['""]URL_BASE['""]\s*,\s*['""]).*?(['""])", $"${{1}}{urlBase}${{2}}", RegexOptions.IgnoreCase);
-
-                // Algumas regexes generalistas para encontrar linhas que costumam definir IP da base e o usuário para troca
-                
-                // HOST (Ex. "localhost" ou outro ip)
-                // Se for PHP puro, algo como: 'host' => 'localhost', $host="localhost";
-                // Troca ocorrências parecidas com algo 'host' ou 'DB_HOST' sendo instanciados ou array
-                content = Regex.Replace(content, @"(['""]host['""]\s*=>\s*['""]).*?(['""])", $"${{1}}{ipLocal}${{2}}", RegexOptions.IgnoreCase);
-                content = Regex.Replace(content, @"(['""]DB_HOST['""]\s*,\s*['""]).*?(['""])", $"${{1}}{ipLocal}${{2}}", RegexOptions.IgnoreCase);
-                content = Regex.Replace(content, @"((?:public|protected|private)?\s*\$host\s*=\s*['""]).*?(['""])", $"${{1}}{ipLocal}${{2}}", RegexOptions.IgnoreCase);
 
                 // USUARIO ('root', etc)
                 content = Regex.Replace(content, @"(['""]username['""]\s*=>\s*['""]).*?(['""])", $"${{1}}{dbUser}${{2}}", RegexOptions.IgnoreCase);
@@ -368,7 +357,7 @@ namespace SaagiInstaller
                 content = Regex.Replace(content, @"((?:public|protected|private)?\s*\$pass(?:wd|word)?\s*=\s*['""]).*?(['""])", $"${{1}}{dbPassword}${{2}}", RegexOptions.IgnoreCase);
 
                 File.WriteAllText(configPath, content);
-                Console.WriteLine($"[✓] As chaves de acesso ao 'Config.php' foram atualizadas (IP: {ipLocal}, Usuário: {dbUser}).");
+                Console.WriteLine($"[✓] As chaves de acesso ao 'Config.php' foram atualizadas (Usuário: {dbUser}).");
             }
             catch (Exception ex)
             {
